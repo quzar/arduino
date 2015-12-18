@@ -3,7 +3,7 @@
 
 #include <SoftwareSerial.h>
 SoftwareSerial myLCD(0,4); // pin 4 = TX, pin 0 = RX (unused)
-SoftwareSerial myGPS(3,2); // pin 2 = TX, pin 3 = RX
+SoftwareSerial myGPS(2,3); // pin 3 = TX, pin 2 = RX
 
 Adafruit_GPS GPS(&myGPS);
 #define GPSECHO false
@@ -17,22 +17,13 @@ float range = 3000;
 
 int gpsWasFixed = HIGH;
 int ledFix = 4;
-int servoPin = 9;
-int servoLock = 110;
-int servoUnlock = 0;
 
 String here;
-//String there = "N43 35.792, W079 30.145"; // 24 Emerald Crescent
-String there = "N43 35.893, W079 30.180"; // 62 Sixth Street
+String there = "N43 35.894, W079 30.181";
 
 void setup() {
-  //servoLatch.attach(SERVO_PIN_A);
-  //servoLatch.write(servoLock);
-  //delay(50);
-  
-  myLCD.begin(9600); // set up serial port for 9600 baud  
-  Serial.begin(115200);
-  Serial.println("Debug GPS Test:");
+  myLCD.begin(9600); // set up LCD for 9600 baud  
+  Serial.begin(115200); // debug on serial port
   
   GPS.begin(9600);
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
