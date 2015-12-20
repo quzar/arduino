@@ -2,11 +2,12 @@
 #include <Adafruit_GPS.h>
 
 #include <SoftwareSerial.h>
-SoftwareSerial myLCD(0,4); // pin 4 = TX, pin 0 = RX (unused)
-SoftwareSerial myGPS(2,3); // pin 3 = TX, pin 2 = RX
+SoftwareSerial myLCD(0,4);
+SoftwareSerial myGPS(3,2);
 
 Adafruit_GPS GPS(&myGPS);
 #define GPSECHO false
+
 boolean usingInterrupt = false;
 void useInterrupt(boolean);
 
@@ -19,7 +20,7 @@ int gpsWasFixed = HIGH;
 int ledFix = 4;
 
 String here;
-String there = "N43 35.894, W079 30.181";
+String there = "N44 44.266, W076 50.776"; // 1447 Mountain Grove Rd
 
 void setup() {
   myLCD.begin(9600); // set up LCD for 9600 baud  
@@ -48,13 +49,6 @@ void loop() {
 
     here = gps2string((String) GPS.lat, GPS.latitude, (String) GPS.lon, GPS.longitude);
     range = haversine(string2lat(here), string2lon(here), string2lat(there), string2lon(there));
-    Serial.print("Here: "); // for GPS debug
-    Serial.println(here);
-    Serial.print("There: ");
-    Serial.println(there);
-    Serial.print("Range: ");
-    Serial.print(range);
-    Serial.println("m");
     
     clearLCD();
     selectLineOne();
@@ -68,24 +62,22 @@ void loop() {
     delay(500);
   }
   else {
-    Serial.println("No fix!");
+    Serial.println("No fix yet...");
     
     clearLCD();
     selectLineOne();
-    myLCD.write("Hello John!");
+    myLCD.write("Hi John; Take me");
     selectLineTwo();
-    myLCD.write("Take me outside!");
+    myLCD.write("outside & wait..");
     delay(200);
   }
   
   if (range < 20.0) {
-    //servoLatch.write(servoUnlock);
-    //delay(1000);
     clearLCD();
     selectLineOne();
-    myLCD.write("John: You made it!");
+    myLCD.write("Goal 01 unlocked");
     selectLineTwo();
-    myLCD.write("Next clue...");
+    myLCD.write(">>> bit.ly/jgm01");
     delay(5000);
   }
 }
@@ -93,8 +85,10 @@ void loop() {
 SIGNAL(TIMER0_COMPA_vect) {
   // Interrupt is called once a millisecond, looks for any new GPS data, and stores it
   char c = GPS.read();
-  if (GPSECHO)
+  if (GPSECHO) {
     if (c) UDR0 = c;
+    if (c) Serial.print(c);
+  }
 }
 
 void useInterrupt(boolean v) {
