@@ -20,7 +20,7 @@ int gpsWasFixed = HIGH;
 int ledFix = 4;
 
 String here;
-String there = "N44 44.266, W076 50.776"; // 1447 Mountain Grove Rd
+String there = "N44 44.266, W076 50.776";
 
 void setup() {
   myLCD.begin(9600); // set up LCD for 9600 baud  
